@@ -16,6 +16,6 @@ app.listen(port ?? 5000, () => {
   console.log("🚀 Server ready at: http://localhost:" + port);
 });
 
-cron.schedule("* * * * *", () => {
-  marketsWatcher().catch((e) => console.log("❌  Market Watcher Error: ", e));
-});
+// cron.schedule("* * * * *", () => {
+//   marketsWatcher().catch((e) => console.log("❌  Market Watcher Error: ", e));
+// });
