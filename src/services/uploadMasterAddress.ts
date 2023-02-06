@@ -12,35 +12,25 @@ function findIndexByProperty(data: any, key: string, value: string) {
   return -1;
 }
 
-const uploadOracleWallet = async (req: any) => {
+const uploadMasterAddress = async (req: any) => {
   let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
   let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
-    console.log(token)
-    console.log(jwtSecretKey)
     const verified = jwt.verify(token, jwtSecretKey ?? '');
-    console.log(verified)
     if (verified) {
-      console.log(verified)
-      console.log(req.body.address)
-      console.log(req.body.oracleKey)
       //@ts-ignore
       const user = await User.findOne({ ownerAddress: verified.wallet });
       console.log(user)
       if (user) {
         const index = findIndexByProperty(user.oracles, 'oracleKey', req.body.oracleKey)
-        console.log(index)
+
         if (user.oracles[index]) {
+          console.log(user.oracles[index])
           //@ts-ignore
-          user.oracles[index].oracleAddress = req.body.address
-          //@ts-ignore 
-          // const add = verified.wallet as string
-          // console.log(add)
-          // console.log(newOracle
-          console.log(user.oracles
-          )
+          user.oracles[index].masterAddress = req.body.masterAddress
+          console.log(user.oracles[index])
           await User.updateOne({
             //@ts-ignore
             ownerAddress: verified.wallet
@@ -64,21 +54,7 @@ const uploadOracleWallet = async (req: any) => {
   }
 
   // const user = await User.findOne({ ownerAddress: req.body.ownerAddress });
-  // if (user) {
-  //     console.log(user);
-  //     return user
-  // } else {
-  //     const res = userKeyGen(req.body.ownerAddress)
-  //     const marketsList = [
-  //         {
-  //             ownerAddress: req.body.ownerAddress,
-  //             apiKey: res.apiKey,
-  //             oracles: []
-  //         },
-  //     ];
-  //     marketsList.forEach((e) => User.create(e));
-  //     return marketsList[0]
-  // }
+  return { status: 'unknown error' }
 }
 
-export default uploadOracleWallet 
+export default uploadMasterAddress 
