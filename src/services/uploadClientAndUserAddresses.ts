@@ -1,3 +1,4 @@
+
 import { verify } from 'crypto';
 import jwt from 'jsonwebtoken';
 import { User } from "../models/User";
@@ -12,7 +13,7 @@ function findIndexByProperty(data: any, key: string, value: string) {
   return -1;
 }
 
-const uploadMasterAddress = async (req: any, res: any) => {
+const uploadClientAndUserAddresses = async (req: any, res: any) => {
   let jwtSecretKey = process.env.JWT_SECRET_KEY;
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
@@ -24,7 +25,9 @@ const uploadMasterAddress = async (req: any, res: any) => {
         const index = findIndexByProperty(user.oracles, 'oracleKey', req.body.oracleKey)
         if (user.oracles[index]) {
           //@ts-ignore
-          user.oracles[index].masterAddress = req.body.masterAddress
+          user.oracles[index]?.clientAddress = req.body.clientAddress
+          //@ts-ignore
+          user.oracles[index]?.userAddress = req.body.userAddress
           await User.updateOne({
             //@ts-ignore
             ownerAddress: verified.wallet
@@ -40,4 +43,4 @@ const uploadMasterAddress = async (req: any, res: any) => {
   }
 }
 
-export default uploadMasterAddress 
+export default uploadClientAndUserAddresses

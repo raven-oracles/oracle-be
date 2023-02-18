@@ -14,19 +14,13 @@ function makeid(length: number) {
     }
     return result;
 }
-const createOracle = async (req: any) => {
-    let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
+const createOracle = async (req: any, res: any) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
-        console.log(token)
-        console.log(jwtSecretKey)
         const verified = jwt.verify(token, jwtSecretKey ?? '');
         if (verified) {
-            console.log(verified)
-            console.log('test')
-            const newOracle = 
+            const newOracle =
             {
                 oracleKey: makeid(16),
                 oracleAddress: 'none',
@@ -36,41 +30,14 @@ const createOracle = async (req: any) => {
             }
             //@ts-ignore 
             const add = verified.wallet as string
-            console.log(add)
-            console.log(newOracle)
             await User.updateOne({ ownerAddress: add }, { $push: { oracles: newOracle } });
-            return { status: 'ok', newOracle }
-            // return ("Successfully Verified");
+            res.send(JSON.stringify({ status: 'ok', newOracle }))
         } else {
-            // Access Denied
-            return { status: 'denied' }
-            console.log('denied')
-            // return '';
+            res.send(JSON.stringify({ status: 'denied' }))
         }
     } catch (error) {
-        console.log(error)
-        console.log('err')
-        return { status: 'error', error }
-        // Access Denied
-        // return;
+        res.send(JSON.stringify({ status: 'error', error }))
     }
-
-    // const user = await User.findOne({ ownerAddress: req.body.ownerAddress });
-    // if (user) {
-    //     console.log(user);
-    //     return user
-    // } else {
-    //     const res = userKeyGen(req.body.ownerAddress)
-    //     const marketsList = [
-    //         {
-    //             ownerAddress: req.body.ownerAddress,
-    //             apiKey: res.apiKey,
-    //             oracles: []
-    //         },
-    //     ];
-    //     marketsList.forEach((e) => User.create(e));
-    //     return marketsList[0]
-    // }
 }
 
 export default createOracle

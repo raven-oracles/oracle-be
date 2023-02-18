@@ -2,11 +2,11 @@ import jwt from 'jsonwebtoken';
 import { User } from "../models/User";
 import userKeyGen from "./userKeyGen";
 
-const userLogin = async (req: { body: { ownerAddress: string } }) => {
+const userLogin = async (req: any, res: any) => {
     const user = await User.findOne({ ownerAddress: req.body.ownerAddress });
     if (user) {
         console.log(user);
-        return user
+        res.send(JSON.stringify(user))
     } else {
         const res = userKeyGen(req.body.ownerAddress)
         const marketsList = [

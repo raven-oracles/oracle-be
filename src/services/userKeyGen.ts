@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-// userKeyGen(req.body.wallet)
 const userKeyGen = (userWallet: string) => {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
     let data = {
@@ -12,6 +11,5 @@ const userKeyGen = (userWallet: string) => {
         apiKey: token
     }
 }
-// makeid(16)
 
 export default userKeyGen 
